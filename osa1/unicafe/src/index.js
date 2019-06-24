@@ -11,12 +11,10 @@ const Button = (props) => {
 }
 
 const Statistics = (props) => {
-    if (props.good === 0 && props.neutral === 0 && props.bad === 0) {
-        return (<p>No feedback given...</p>)
-    }
     return (
-        <p>good: {props.good} <br/> neutral: {props.neutral}<br/> bad: {props.bad} <br/>
-        all: {props.sum} <br/> avarage: {props.avg}<br/> positive: {props.positive} %</p>
+        <tr>
+            <td>{props.text}</td><td>{props.value}</td>
+        </tr>
     )
 }
 
@@ -53,7 +51,7 @@ const App = () => {
     const positive = () => {
         var positiveCount = 0;
         positiveCount += good
-        return positiveCount/sum();
+        return (positiveCount/sum())*100 + ' %'
     }
 
     return (
@@ -63,8 +61,16 @@ const App = () => {
             <Button handleClick={handleNeutralClick} text='neutral' />
             <Button handleClick={handleBadClick} text='bad' />
             <h1>Statistics</h1>
-            <Statistics good={good} neutral={neutral} bad={bad} 
-            sum={sum()} avg={avg()} positive={positive()} />
+            <table className="table">
+                <tbody>
+                    <Statistics text="good" value={good} />
+                    <Statistics text="neutral" value={neutral} />
+                    <Statistics text="bad" value={bad} />
+                    <Statistics text="all" value={sum()} />
+                    <Statistics text="average" value={avg()} />
+                    <Statistics text="positive" value={positive()} />
+                </tbody>
+            </table>
         </div>
     )
 }
