@@ -1,18 +1,34 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 
+const Display = ({ counter }) => <div>{counter}</div>
+
+const Button = ({ handleClick, text }) => (
+    <button onClick={handleClick}>
+        {text}
+    </button>
+)
+
 const App = (props) => {
     const [ counter, setCounter ] = useState(0)
-
-    setTimeout(
-        () => setCounter(counter + 1),
-        1000
-    )
-
-    console.log('rendering...', counter)
-
+    const setToValue = (value) => setCounter(value)
+    
     return (
-      <div>{counter}</div>
+        <div>
+        <Display counter={counter}/>
+        <Button
+          onClick={() => setToValue(counter + 1)}
+          text='plus'
+        />
+        <Button
+          onClick={() => setToValue(counter - 1)}
+          text='minus'
+        />
+        <Button
+          onClick={() => setToValue(0)}
+          text='zero'
+        />
+      </div>
     )
   }
   
