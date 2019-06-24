@@ -47,10 +47,9 @@ const App = (props) => {
     return (
         <div>
         <div>
-            {left}
+            {left} | {right} <br />
             <Button handleClick={handleLeftClick} text='left' />
             <Button handleClick={handleRightClick} text='right' />
-            {right}
             <History allClicks={allClicks} />
         </div>
         </div>
