@@ -1,7 +1,6 @@
 import React from 'react';
 
 const Total = (props) => {
-    console.log(props)
     var i = 0;
     var totalnum = 0;
     while ( i < 3)
