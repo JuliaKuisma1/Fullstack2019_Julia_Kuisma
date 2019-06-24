@@ -3,7 +3,7 @@ import React from 'react';
 const Content = props => {
     return (
         <div>
-            <p>{props.part.name}: {props.part.exercises}</p>
+            <p>{props.parts.name}: {props.parts.exercises}</p>
         </div>
     )
 }
