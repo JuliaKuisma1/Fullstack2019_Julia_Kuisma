@@ -11,6 +11,9 @@ const Button = (props) => {
 }
 
 const Statistics = (props) => {
+    if (props.good === 0 && props.neutral === 0 && props.bad === 0) {
+        return (<p>No feedback given...</p>)
+    }
     return (
         <p>good: {props.good} <br/> neutral: {props.neutral}<br/> bad: {props.bad} <br/>
         all: {props.sum} <br/> avarage: {props.avg}<br/> positive: {props.positive} %</p>
