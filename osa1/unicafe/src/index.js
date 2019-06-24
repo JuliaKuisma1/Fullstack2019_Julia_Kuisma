@@ -30,6 +30,22 @@ const App = () => {
         console.log('clicked bad')
     }
 
+    const sum = () => good + neutral + bad
+    
+    const avarage = () => {
+        var avarage = 0;
+        // plus good reviews, minus bad reviews
+        avarage += good
+        avarage -= bad
+        return avarage = avarage/sum();
+    }
+
+    const positive = () => {
+        var positiveCount = 0;
+        positiveCount += good
+        return positiveCount/sum();
+    }
+
     return (
         <div>
             <h1>Give feedback</h1>
@@ -37,7 +53,8 @@ const App = () => {
             <Button handleClick={handleNeutralClick} text='neutral' />
             <Button handleClick={handleBadClick} text='bad' />
             <h1>Statistics</h1>
-            <p>good: {good} <br/> neutral: {neutral}<br/> bad: {bad}</p>
+            <p>good: {good} <br/> neutral: {neutral}<br/> bad: {bad} <br/>
+            all: {sum()} <br/> avarage: {avarage()}<br/> positive: {positive()} %</p>
         </div>
     )
 }
