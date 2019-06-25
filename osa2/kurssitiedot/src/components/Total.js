@@ -2,7 +2,8 @@ import React from 'react';
 
 const Total = (props) => {
     const { total } = props
-    console.log(total);
+    console.log(total)
+
     const totalnum = () => total.map(total => total.exercises).reduce(getSum, 0)
 
     function getSum (total, num) {

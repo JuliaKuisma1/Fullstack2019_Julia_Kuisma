@@ -5,9 +5,7 @@ const Content = (props) => {
     const { parts } = props
 
     return (
-        <div>
-            <Part parts={parts} />
-        </div>
+        <Part parts={parts} />
     )
 }
 
