@@ -1,16 +1,17 @@
 import React from 'react';
 
 const Total = (props) => {
-    var i = 0;
-    var totalnum = 0;
-    while ( i < 3)
-    {
-        totalnum += props.total[i].exercises;
-        i++;
+    const { total } = props
+    console.log(total);
+    const totalnum = () => total.map(total => total.exercises).reduce(getSum, 0)
+
+    function getSum (total, num) {
+        return total + Math.round(num)
     }
+
     return (
         <div>
-            <p>Total: {totalnum}</p>
+            <p><strong>Total of {totalnum()} exercises</strong></p>
         </div>
     )
 }
