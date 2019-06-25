@@ -11,9 +11,10 @@ const Button = (props) => {
 }
 
 const Statistics = (props) => {
+    const { text, value } = props;
     return (
         <tr>
-            <td>{props.text}</td><td>{props.value}</td>
+            <td>{text}</td><td>{value}</td>
         </tr>
     )
 }
@@ -22,20 +23,21 @@ const App = () => {
     const [good, setGood] = useState(0)
     const [neutral, setNeutral] = useState(0)
     const [bad, setBad] = useState(0)
+    var [state, setState] = useState(false)
 
     const handleGoodClick = () => {
         setGood(good + 1)
-        console.log('clicked good')
+        setState(true)
     }
 
     const handleNeutralClick = () => {
         setNeutral(neutral + 1)
-        console.log('clicked neutral')
+        setState(true)
     }
 
     const handleBadClick = () => {
         setBad(bad + 1)
-        console.log('clicked bad')
+        setState(true)
     }
 
     const sum = () => good + neutral + bad
@@ -52,6 +54,19 @@ const App = () => {
         var positiveCount = 0;
         positiveCount += good
         return (positiveCount/sum())*100 + ' %'
+    }
+
+    if (state === false) {
+        return (
+            <div>
+                <h1>Give feedback</h1>
+                <Button handleClick={handleGoodClick} text='good' />
+                <Button handleClick={handleNeutralClick} text='neutral' />
+                <Button handleClick={handleBadClick} text='bad' />
+                <h1>Statistics</h1>
+                <p>No feedback given!</p>
+            </div>
+        )
     }
 
     return (
