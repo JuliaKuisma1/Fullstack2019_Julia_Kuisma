@@ -53,7 +53,7 @@ const App = () => {
                 },
                 {
                     name: 'Syntacs',
-                    exercises: 4,
+                    exercises: 10,
                     id: 2
                 },
                 {
