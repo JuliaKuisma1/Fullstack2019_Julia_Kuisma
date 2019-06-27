@@ -16,7 +16,7 @@ const App = (props) => {
   const [ newFilter, setNewFilter ] = useState('')
 
   // adds information to persons array
-  const addInformation = (event) => {
+  const addInformation = event => {
     event.preventDefault();
     const personObject = {
       name: newName,
@@ -51,9 +51,21 @@ const App = (props) => {
   const applyFilter = event =>{
     event.preventDefault();
     const filter = newFilter;
-    console.log(filter);
     // set filter to persons array
+    var filtered = personsContains(persons, filter);
+    return filtered
   };
+  
+  const personsContains = (persons, filter) => {
+    console.log(persons.map(person => {
+      if (person.name.includes(filter)) {
+        return person
+      }
+      else {
+        return ''
+      }
+    }));
+  }
 
   // handle name input changes
   const handleNameChange = event => setNewName(event.target.value);
