@@ -1,63 +1,79 @@
 import React, { useState } from 'react';
+import PersonForm from './components/PersonForm';
+import Persons from './components/Persons';
+import Filter from './components/Filter';
 
 const App = (props) => {
   // array that contains all person information and new name and number
-  const [ persons, setPersons ] = useState([ { name: 'Arto Hellas', number: '040 123 4567' }])
+  const [ persons, setPersons ] = useState([ 
+    { name: 'Arto Hellas', number: '040 123 4567' },
+    { name: 'Ada Lovelace', number: '39-44-5323523' },
+    { name: 'Dan Abramov', number: '12-43-234345' },
+    { name: 'Mary Poppendieck', number: '39-23-6423122' }
+  ])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
+  const [ newFilter, setNewFilter ] = useState('')
 
-  // need to implement check that if name already exists
+  // adds information to persons array
   const addInformation = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     const personObject = {
       name: newName,
       number: newNumber
+    };
+    // display alert if name already exists
+    if (checkValue(personObject.name, persons) === 'Exist') {
+      alert(newName +' is already in the phonebook!');
     }
-    setPersons(persons.concat(personObject))
-    setNewName('')
-    setNewNumber('')
+    // set personObject to array and clear input fields
+    else {
+      setPersons(persons.concat(personObject));
+      setNewName('');
+      setNewNumber('');
+    }
   }
+
+  // checking if name already exists
+  function checkValue(value, arr){
+    var status = 'Not exist';
+   
+    for (var i = 0; i < arr.length; i++){
+      var name = arr[i].name;
+      if(name === value){
+        status = 'Exist';
+        break;
+      }
+    }
+    return status;
+  }
+
+  const applyFilter = event =>{
+    event.preventDefault();
+    const filter = newFilter;
+    console.log(filter);
+    // set filter to persons array
+  };
 
   // handle name input changes
-  const handleNameChange = (event) => {
-    console.log(event.target.value);
-    setNewName(event.target.value)
-  }
-
+  const handleNameChange = event => setNewName(event.target.value);
+  
   // handle number input changes
-  const handleNumberChange = (event) => {
-    console.log(event.target.value);
-    setNewNumber(event.target.value)
-  }
+  const handleNumberChange = event => setNewNumber(event.target.value);
 
-  // display persons array
-  const rows = () => persons.map(person => 
-    <tr key={person.name}><td>{person.name}</td><td>{person.number}</td></tr>)
+  // handle filter changes
+  const handleFilterChange = event => setNewFilter(event.target.value);
     
   return (
     <div>
       <h1>Phonebook</h1>
-      <form onSubmit={addInformation}>
-        <table>
-          <tbody>
-            <tr>
-              <td> Name: </td><td><input value={newName} onChange={handleNameChange}/></td>
-            </tr>
-            <tr>
-              <td>Number: </td><td><input value={newNumber} onChange={handleNumberChange}/></td>
-            </tr>
-            <tr>
-              <td><button type="submit">add</button></td> 
-            </tr>
-          </tbody>
-        </table>
-      </form>
-      <h2>Numbers</h2>
-      <table>
-        <tbody>
-          {rows()}
-        </tbody>
-      </table>
+      <h3>Filter phonebook</h3>
+        <Filter newFilter={newFilter} handleFilterChange={handleFilterChange} applyFilter={applyFilter}/>
+      <h3>Add a new</h3>
+        <PersonForm handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}
+          newName={newName} newNumber={newNumber} addInformation={addInformation} />
+      <h3>Numbers</h3>
+        <Persons persons={persons} />
     </div> 
   )
 }
