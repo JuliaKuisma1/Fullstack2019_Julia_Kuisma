@@ -55,11 +55,11 @@ const App = (props) => {
   const filterArray = event => {
     event.preventDefault();
     
-    // check if name exists there, also transform name to lowercase so we can check it more easily
+    // check if filter is included in names, also change name to lowercase so it's more easier to compare
     if (newFilter !== '') {
       const filteredArray = persons.filter(person =>
         person.name.includes(newFilter) || 
-        person.name.toLocaleLowerCase().includes(newFilter.toLocaleLowerCase().trim())
+        person.name.toLowerCase().includes(newFilter.toLowerCase())
     );
       setFiltered(filteredArray);
     }
