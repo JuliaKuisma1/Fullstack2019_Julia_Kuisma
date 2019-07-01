@@ -1,7 +1,7 @@
 import React from 'react';
 
 const PersonForm = (props) => {
-    const { handleNameChange, handleNumberChange, newName, newNumber, addInformation } = props
+    const { addInformation, newName, handleNameChange, newNumber, handleNumberChange } = props
     return (
         <form onSubmit={addInformation}>
             <table>

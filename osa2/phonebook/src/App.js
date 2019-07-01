@@ -4,7 +4,8 @@ import Persons from './components/Persons';
 import Filter from './components/Filter';
 
 const App = (props) => {
-  // array that contains all person information and new name and number
+  // array that contains all person information
+  // variables for setting name, number and filter, and filtered array
   const [ persons, setPersons ] = useState([ 
     { name: 'Arto Hellas', number: '040 123 4567' },
     { name: 'Ada Lovelace', number: '39-44-5323523' },
@@ -14,8 +15,9 @@ const App = (props) => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newFilter, setNewFilter ] = useState('')
+  const [ filtered, setFiltered ] = useState([])
 
-  // adds information to persons array
+  // adds information by adding personObject to persons array
   const addInformation = event => {
     event.preventDefault();
     const personObject = {
@@ -38,7 +40,8 @@ const App = (props) => {
   function checkValue(value, arr){
     var status = 'Not exist';
    
-    for (var i = 0; i < arr.length; i++){
+    // if name exists, change status and break the loop
+    for (var i = 0; i < arr.length; i++) {
       var name = arr[i].name;
       if(name === value){
         status = 'Exist';
@@ -48,24 +51,23 @@ const App = (props) => {
     return status;
   }
 
-  const applyFilter = event =>{
+  // function that filters array, if filter is set, displays filtered array
+  const filterArray = event => {
     event.preventDefault();
-    const filter = newFilter;
-    // set filter to persons array
-    var filtered = personsContains(persons, filter);
-    return filtered
+    
+    // check if name exists there, also transform name to lowercase so we can check it more easily
+    if (newFilter !== '') {
+      const filteredArray = persons.filter(person =>
+        person.name.includes(newFilter) || 
+        person.name.toLocaleLowerCase().includes(newFilter.toLocaleLowerCase().trim())
+    );
+      setFiltered(filteredArray);
+    }
+    // if filter is empty, display original array
+    else {
+      setFiltered(persons);
+    }
   };
-  
-  const personsContains = (persons, filter) => {
-    console.log(persons.map(person => {
-      if (person.name.includes(filter)) {
-        return person
-      }
-      else {
-        return ''
-      }
-    }));
-  }
 
   // handle name input changes
   const handleNameChange = event => setNewName(event.target.value);
@@ -80,12 +82,12 @@ const App = (props) => {
     <div>
       <h1>Phonebook</h1>
       <h3>Filter phonebook</h3>
-        <Filter newFilter={newFilter} handleFilterChange={handleFilterChange} applyFilter={applyFilter}/>
+        <Filter newFilter={newFilter} handleFilterChange={handleFilterChange} filterArray={filterArray} filtered={filtered} />
       <h3>Add a new</h3>
         <PersonForm handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}
           newName={newName} newNumber={newNumber} addInformation={addInformation} />
       <h3>Numbers</h3>
-        <Persons persons={persons} />
+        <Persons persons={persons} filtered={filtered} />
     </div> 
   )
 }

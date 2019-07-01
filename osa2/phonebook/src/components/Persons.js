@@ -1,16 +1,25 @@
 import React from 'react';
 
 const Persons = (props) => {
-    const { persons } = props
+    const { persons, filtered } = props
 
-    // display persons array
-    const rows = () => persons.map(person => 
-    <tr key={person.name}><td>{person.name}</td><td>{person.number}</td></tr>)
+    const checkPerson = () => {
+        if (filtered !== '' && filtered.length > 0) {
+            return filtered.map(person => 
+                <tr key={person.name}><td>{person.name}</td><td>{person.number}</td></tr>)
+        }
+    
+        else {
+            // display persons array
+            return persons.map(person => 
+                <tr key={person.name}><td>{person.name}</td><td>{person.number}</td></tr>)
+        }
+    }
 
     return (
         <table>
             <tbody>
-                {rows()}
+                {checkPerson()}
             </tbody>
         </table>
     )
