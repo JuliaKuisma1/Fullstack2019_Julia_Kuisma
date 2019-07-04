@@ -11,11 +11,12 @@ const Display = props => {
   }
   // else display country information
   else {
+    console.log(displayCountry);
     return (
       <div>
-        <h2 key={displayCountry.name}>{displayCountry.name}</h2>
+        <h2 key={displayCountry.name}>{displayCountry.name} | {displayCountry.alpha2Code} | {displayCountry.nativeName}</h2>
         <p key={displayCountry.capital}>Capital: {displayCountry.capital} <br/>
-        Population: {displayCountry.population}</p>
+            Population: {displayCountry.population}</p>
         <h3>Languages</h3>
         <ul>
           {displayCountry.languages.map(language =>
@@ -27,7 +28,7 @@ const Display = props => {
   }
 }
 
-const App = (props) => {
+const App = () => {
   const [ countries, setCountries ] = useState([])
   const [ displayCountry, setDisplayCountry ] = useState()
   const [ filter, setFilter ] = useState('')
@@ -51,11 +52,18 @@ const App = (props) => {
     if (filteredCountries.length > 10) {
       return <p>Too many matches, specify another filter</p>
     }
+    else if (filteredCountries.length === 1) {
+      return filteredCountries.map(country => (
+        <div key={country.name}>
+          <button onClick={() => setDisplayCountry(country)}>show</button><br/>
+        </div>
+      ))
+    }
     // else show countries and show buttons 
     else {
       return filteredCountries.map(country => (
         <div key={country.name}>
-          {country.name}<button onClick={() => showCountry(country)}>show</button><br/>
+          {country.name}<button onClick={() => setDisplayCountry(country)}>show</button><br/>
         </div>
       ))
     }
@@ -64,7 +72,10 @@ const App = (props) => {
   const filterCountries = event => {
     event.preventDefault();
     // check if filter is included in names, also change name to lowercase so it's more easier to compare
-    if (filter !== '') {
+    if (filter === '' || undefined) {
+      return null;
+    }
+    else {
       setFilteredCountries(countries.filter(country =>
         country.name.includes(filter) || 
         country.name.toLowerCase().includes(filter.toLowerCase())
@@ -73,24 +84,19 @@ const App = (props) => {
     }
   };
 
-  // set country as displayCountry
-  const showCountry = country => {
-    setDisplayCountry(country);
-  }
-
   // handle filter changes
   const handleFilterChange = event => setFilter(event.target.value);
 
   return (
     <div>
-      <h1>Information about EU Countries</h1>
+      <h1>Information about Countries</h1>
       <form onSubmit={filterCountries}>
         find countries: <input value={filter} onChange={handleFilterChange} />
       </form>
       <div>
         {checkFiltered()}
+        <Display displayCountry={displayCountry} />
       </div>
-      <Display displayCountry={displayCountry} />
     </div> 
   )
 }
