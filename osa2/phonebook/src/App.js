@@ -34,7 +34,7 @@ const App = (props) => {
     };
     // display alert if name already exists
     if (checkValue(personObject.name, persons) === 'Exist') {
-      alert(newName +' is already in the phonebook!');
+      alert(`${personObject.name} is already in the phonebook!`);
     }
     // set personObject to array and clear input fields
     else {
@@ -50,7 +50,7 @@ const App = (props) => {
   }
 
   // checking if name already exists
-  function checkValue(value, arr){
+  const checkValue = (value, arr) => {
     var status = 'Not exist';
    
     // if name exists, change status and break the loop
@@ -67,18 +67,18 @@ const App = (props) => {
   // function that filters array, if filter is set, displays filtered array
   const filterArray = event => {
     event.preventDefault();
-    
+
+    // if filter is empty, display original array
+    if (newFilter === '' || undefined) {
+      setFiltered(persons);
+    }
     // check if filter is included in names, also change name to lowercase so it's more easier to compare
-    if (newFilter !== '') {
+    else {
       const filteredArray = persons.filter(person =>
         person.name.includes(newFilter) || 
         person.name.toLowerCase().includes(newFilter.toLowerCase())
-    );
+      );
       setFiltered(filteredArray);
-    }
-    // if filter is empty, display original array
-    else {
-      setFiltered(persons);
     }
   };
 
