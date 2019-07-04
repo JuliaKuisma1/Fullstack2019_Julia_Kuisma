@@ -95,7 +95,7 @@ const App = () => {
       <form onSubmit={filterCountries}>
         find countries: <input value={filter} onChange={handleFilterChange} />
       </form>
-      <div>
+      <div id="info">
         {checkFiltered()}
         <Display displayCountry={displayCountry} />
       </div>
