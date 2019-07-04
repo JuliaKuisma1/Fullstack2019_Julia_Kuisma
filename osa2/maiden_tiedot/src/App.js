@@ -11,7 +11,6 @@ const Display = props => {
   }
   // else display country information
   else {
-    console.log(displayCountry);
     return (
       <div>
         <h2 key={displayCountry.name}>{displayCountry.name} | {displayCountry.alpha2Code} | {displayCountry.nativeName}</h2>
@@ -36,11 +35,9 @@ const App = () => {
 
   // get all informationto countries array
   const hook = () => {
-    console.log('effect')
     axios
       .get('https://restcountries.eu/rest/v2/all')
       .then(response => {
-        console.log('promise fulfilled')
         setCountries(response.data)
       })
   };
@@ -53,36 +50,41 @@ const App = () => {
       return <p>Too many matches, specify another filter</p>
     }
     else if (filteredCountries.length === 1) {
-      return filteredCountries.map(country => (
-        <div key={country.name}>
-          <button onClick={() => setDisplayCountry(country)}>show</button><br/>
-        </div>
-      ))
+      filteredCountries.map(country => {
+        setToValue(country)
+        return <Display displayCountry={country}/>
+      })
     }
     // else show countries and show buttons 
     else {
       return filteredCountries.map(country => (
         <div key={country.name}>
-          {country.name}<button onClick={() => setDisplayCountry(country)}>show</button><br/>
+          {country.name}<button onClick={setToValue(country)}>show</button><br/>
         </div>
       ))
     }
   }
 
+  // function that handles form
   const filterCountries = event => {
     event.preventDefault();
-    // check if filter is included in names, also change name to lowercase so it's more easier to compare
     if (filter === '' || undefined) {
       return null;
     }
+    // check if filter is included in names, and test lower case too
     else {
       setFilteredCountries(countries.filter(country =>
         country.name.includes(filter) || 
         country.name.toLowerCase().includes(filter.toLowerCase())
       ))
-      checkFiltered();
     }
   };
+
+  const setToValue = (value) => {
+    return () => {
+      setDisplayCountry(value);
+    }
+  }
 
   // handle filter changes
   const handleFilterChange = event => setFilter(event.target.value);
