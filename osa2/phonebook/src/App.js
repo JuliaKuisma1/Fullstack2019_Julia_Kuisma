@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 import Filter from './components/Filter';
-import axios from 'axios';
+import personService from './services/persons';
 
 const App = (props) => {
   // array that contains all person information
@@ -14,13 +14,12 @@ const App = (props) => {
   const [ filtered, setFiltered ] = useState([])
 
   const hook = () => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
-      })
+    // get all persons from json server
+    personService
+      .getAll()
+        .then(initialPersons => {
+          setPersons(initialPersons)
+        })
   };
 
   useEffect(hook, []);
@@ -30,7 +29,8 @@ const App = (props) => {
     event.preventDefault();
     const personObject = {
       name: newName,
-      number: newNumber
+      number: newNumber,
+      id: persons.length +1
     };
     // display alert if name already exists
     if (checkValue(personObject.name, persons) === 'Exist') {
@@ -38,9 +38,14 @@ const App = (props) => {
     }
     // set personObject to array and clear input fields
     else {
-      setPersons(persons.concat(personObject));
-      setNewName('');
-      setNewNumber('');
+      // add person to json server
+      personService
+        .createPerson(personObject)
+          .then(createdPerson => {
+            setPersons(persons.concat(createdPerson));
+            setNewName('');
+            setNewNumber('');
+          })
     }
   }
 
