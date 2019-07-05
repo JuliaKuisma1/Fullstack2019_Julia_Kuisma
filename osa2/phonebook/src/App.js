@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 import Filter from './components/Filter';
+import Notification from './components/Notification';
 import personService from './services/persons';
 
 const App = () => {
@@ -12,6 +13,9 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ newFilter, setNewFilter ] = useState('')
   const [ filtered, setFiltered ] = useState([])
+  const [ message, setMessage ] = useState(null)
+  const [ errorMessage, setErrorMessage ] = useState(null)
+  const [ state, setState ] = useState('error');
 
   const hook = () => {
     // get all persons from json server
@@ -41,10 +45,16 @@ const App = () => {
       if (result === true)
       {
         personService
-        .updatePerson(person.id, personObject)
-        .then(response => 
-          setPersons(persons.map(p => p.name === personObject.name ? response : p))
-        )
+          .updatePerson(person.id, personObject)
+          .then(response => 
+            setPersons(persons.map(p => p.name === personObject.name ? response : p))
+          )
+          .catch (error => {
+            setState("error");
+            handleMessageChange(`Person ${person.name} was already removed from the server`, state);
+          })
+        setState("message")
+        handleMessageChange(`Modified ${person.name}`);
       }
     }
     // set personObject to array and clear input fields
@@ -57,6 +67,8 @@ const App = () => {
             setNewName('');
             setNewNumber('');
           })
+      setState("message");
+      handleMessageChange(`Added ${personObject.name}`);
     }
   }
 
@@ -103,6 +115,18 @@ const App = () => {
     }
   }
 
+  const handleMessageChange = (msg, state) => {
+    if (state === "error") {
+      setErrorMessage(msg);
+    }
+    else {
+      setMessage(msg);
+    }
+    setTimeout(() => {
+      setMessage(null);
+    }, 5000);
+  }
+
   // handle name input changes
   const handleNameChange = event => setNewName(event.target.value);
   
@@ -115,6 +139,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification message={message} errorMessage={errorMessage} />
       <h3>Filter phonebook</h3>
         <Filter newFilter={newFilter} handleFilterChange={handleFilterChange} 
           filterArray={filterArray} filtered={filtered} />
