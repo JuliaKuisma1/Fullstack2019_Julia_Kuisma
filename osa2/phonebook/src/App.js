@@ -4,7 +4,7 @@ import Persons from './components/Persons';
 import Filter from './components/Filter';
 import personService from './services/persons';
 
-const App = (props) => {
+const App = () => {
   // array that contains all person information
   // variables for setting name, number and filter, and filtered array
   const [ persons, setPersons ] = useState([])
@@ -32,9 +32,10 @@ const App = (props) => {
       id: persons.length +1
     };
 
-    // display alert if name already exists
+    // display window.confirm if name already exists
     if (checkValue(personObject.name, persons) === 'Exist') {
       var result = window.confirm(`${personObject.name} is already in the phonebook, replace old number with a new one?`);
+      // set person the object user wants to update
       var person = persons.find(p => p.name === personObject.name);
       
       if (result === true)
