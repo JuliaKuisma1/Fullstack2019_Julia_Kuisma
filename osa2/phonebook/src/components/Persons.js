@@ -15,7 +15,7 @@ const Persons = (props) => {
             return filtered.map(person => 
                 <tr key={person.name}><td>{person.name}</td>
                     <td>{person.number}</td>
-                    <td><button>delete</button></td></tr>)
+                    <td><button onClick={() => deleteById(person.id, person.name)}>delete</button></td></tr>)
         }
     }
 

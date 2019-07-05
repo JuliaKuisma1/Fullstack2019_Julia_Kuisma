@@ -1,47 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-// eslint-disable-next-line
-import css from './index.css';
-
-const Display = props => {
-  const { displayCountry } = props
-  // if country is undefined, it doesn't display anything
-  if (displayCountry === undefined) {
-    return null;
-  }
-  // else display country information
-  else {
-    return (
-      <div>
-        <h2 key={displayCountry.name}>{displayCountry.name} | {displayCountry.alpha2Code} | {displayCountry.nativeName}</h2>
-        <p key={displayCountry.capital}>Capital: {displayCountry.capital} <br/>
-            Population: {displayCountry.population}</p>
-        <h3>Languages</h3>
-        <ul>
-          {displayCountry.languages.map(language =>
-            <li key={language.name}>{language.name}</li>)}
-        </ul>
-        <img src={displayCountry.flag} alt={displayCountry.name} /> 
-      </div>
-    )
-  }
-}
+import countryService from './services/service';
+import Display from './components/Display';
+import './index.css';
 
 const App = () => {
   const [ countries, setCountries ] = useState([])
   const [ displayCountry, setDisplayCountry ] = useState()
   const [ filter, setFilter ] = useState('')
   const [ filteredCountries, setFilteredCountries ] = useState([])
+  const [ weather, setWeather ] = useState([])
 
   // get all informationto countries array
-  const hook = () => {
-    axios
-      .get('https://restcountries.eu/rest/v2/all')
+  useEffect(() => {
+    countryService
+      .getAllCountries()
       .then(response => {
-        setCountries(response.data)
+        setCountries(response)
       })
-  };
-  useEffect(hook, []);
+  }, []);
+
 
   // check how many countries matches to filter
   const checkFiltered = () => {
@@ -50,16 +27,13 @@ const App = () => {
       return <p>Too many matches, specify another filter</p>
     }
     else if (filteredCountries.length === 1) {
-      filteredCountries.map(country => {
-        setToValue(country)
-        return <Display displayCountry={country}/>
-      })
+      return <Display displayCountry={filteredCountries[0]} /> 
     }
     // else show countries and show buttons 
     else {
       return filteredCountries.map(country => (
         <div key={country.name}>
-          {country.name}<button onClick={setToValue(country)}>show</button><br/>
+          {country.name}<button onClick={setTovalue(country)}>show</button><br/>
         </div>
       ))
     }
@@ -68,7 +42,7 @@ const App = () => {
   // function that handles form
   const filterCountries = event => {
     event.preventDefault();
-    if (filter === '' || undefined) {
+    if (filter === '') {
       return null;
     }
     // check if filter is included in names, and test lower case too
@@ -80,7 +54,7 @@ const App = () => {
     }
   };
 
-  const setToValue = (value) => {
+  const setTovalue = (value) => {
     return () => {
       setDisplayCountry(value);
     }
@@ -97,7 +71,7 @@ const App = () => {
       </form>
       <div id="info">
         {checkFiltered()}
-        <Display displayCountry={displayCountry} />
+        <Display displayCountry={displayCountry} weather={weather} />
       </div>
     </div> 
   )
