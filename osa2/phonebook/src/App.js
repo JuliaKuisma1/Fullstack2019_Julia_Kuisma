@@ -21,7 +21,6 @@ const App = (props) => {
           setPersons(initialPersons)
         })
   };
-
   useEffect(hook, []);
 
   // adds information by adding personObject to persons array
@@ -32,9 +31,20 @@ const App = (props) => {
       number: newNumber,
       id: persons.length +1
     };
+
     // display alert if name already exists
     if (checkValue(personObject.name, persons) === 'Exist') {
-      alert(`${personObject.name} is already in the phonebook!`);
+      var result = window.confirm(`${personObject.name} is already in the phonebook, replace old number with a new one?`);
+      var person = persons.find(p => p.name === personObject.name);
+      
+      if (result === true)
+      {
+        personService
+        .updatePerson(person.id, personObject)
+        .then(response => 
+          setPersons(persons.map(p => p.name === personObject.name ? response : p))
+        )
+      }
     }
     // set personObject to array and clear input fields
     else {
@@ -49,10 +59,10 @@ const App = (props) => {
     }
   }
 
-  // checking if name already exists
+  // checking if name already exists, return status (exists/not exists)
   const checkValue = (value, arr) => {
     var status = 'Not exist';
-   
+
     // if name exists, change status and break the loop
     for (var i = 0; i < arr.length; i++) {
       var name = arr[i].name;
@@ -67,10 +77,9 @@ const App = (props) => {
   // function that filters array, if filter is set, displays filtered array
   const filterArray = event => {
     event.preventDefault();
-
-    // if filter is empty, display original array
+    // if filter is empty, clear filtered array
     if (newFilter === '' || undefined) {
-      setFiltered(persons);
+      setFiltered('');
     }
     // check if filter is included in names, also change name to lowercase so it's more easier to compare
     else {
@@ -81,6 +90,17 @@ const App = (props) => {
       setFiltered(filteredArray);
     }
   };
+
+  // function to handle deletePerson
+  const deleteById = (id, name) => {
+    var result = window.confirm(`Delete ${name}?`);
+    // if result is true, delete person by id and reload page
+    if (result === true) {
+      personService
+        .deletePerson(id)
+      window.location.reload();
+    }
+  }
 
   // handle name input changes
   const handleNameChange = event => setNewName(event.target.value);
@@ -95,12 +115,13 @@ const App = (props) => {
     <div>
       <h1>Phonebook</h1>
       <h3>Filter phonebook</h3>
-        <Filter newFilter={newFilter} handleFilterChange={handleFilterChange} filterArray={filterArray} filtered={filtered} />
+        <Filter newFilter={newFilter} handleFilterChange={handleFilterChange} 
+          filterArray={filterArray} filtered={filtered} />
       <h3>Add a new</h3>
         <PersonForm handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}
           newName={newName} newNumber={newNumber} addInformation={addInformation} />
       <h3>Numbers</h3>
-        <Persons persons={persons} filtered={filtered} />
+        <Persons persons={persons} filtered={filtered} deleteById={deleteById} />
     </div> 
   )
 }
