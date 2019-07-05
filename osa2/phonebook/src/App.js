@@ -111,6 +111,9 @@ const App = () => {
     if (result === true) {
       personService
         .deletePerson(id)
+      setTimeout(() => {
+        handleMessageChange(`Deleted ${name}`)
+      }, 5000)
       window.location.reload();
     }
   }
