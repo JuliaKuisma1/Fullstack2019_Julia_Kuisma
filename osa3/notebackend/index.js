@@ -5,6 +5,13 @@ const bodyParser = require('body-parser')
 
 app.use(bodyParser.json());
 
+const generateId = () => {
+    const maxId = notes.length > 0
+        ? Math.max(...notes.map(n => n.id))
+        : 0;
+    return maxId + 1;
+}
+
 let notes = [
     {
         id: 1,
@@ -27,23 +34,29 @@ let notes = [
 ]
 
 app.get('/', (req, res) => {
-    res.send('<h1>Hello World from Finland!</h1>');
+    res.send('<h1>Hello World!</h1>');
 });
 
 app.get('/notes', (req, res) => {
     res.json(notes);
 });
 
-const generateId = () => {
-    const maxId = notes.length > 0
-        ? Math.max(...notes.map(n => n.id))
-        : 0;
-    return maxId + 1;
-}
-
 app.post('/notes', (req, res) => {
     const body = req.body;
-    note.id = maxId +1;
+
+    if (!body.content) {
+        return res.status(400).json({
+            error: 'content missing!'
+        })
+    }
+    
+    const note = {
+        content: body.content,
+        important: body.important || false,
+        date: new Date(),
+        id: generateId(),
+    }
+
     notes = notes.concat(note);
     res.json(note);
 })
